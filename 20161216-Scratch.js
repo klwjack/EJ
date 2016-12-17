@@ -175,7 +175,7 @@ function foo(){
 
 baz(); // <-- call-site for 'baz'
 */
-
+/*
 //default binding this
 function foo(){
   //"use strict";
@@ -216,3 +216,58 @@ var obj1 = {
 };
 
 obj1.obj2.foo(); //42
+*/
+/*
+//implicityly lost
+function foo(){
+  console.log(this.a);
+}
+
+var obj = {
+  a: 2,
+  foo: foo
+};
+
+var bar = obj.foo; //function reference/alias
+
+var a = 'oops, global'; //'a' also property on global object
+
+bar(); //undefined
+obj.foo(); //2
+//although bar appears to bea reference to obj.foo, it's actually just another
+//reference to foo itself.  and it is the call-site that really matters, and
+//the call-site is bar(), which is aplain, undecorated call, and thus the
+//default binding applies
+*/
+/*
+function foo(){
+  console.log(this.a);
+}
+
+function doFoo(fn){
+  //'fn' is just another reference to 'foo'
+
+  fn(); // <-- call-site!
+}
+
+var obj = {
+  a: 2,
+  foo: foo
+};
+
+var a = "oops, global"; //'a' also property on global object
+doFoo(obj.foo); // 'oops, global' or undefined
+*/
+
+function foo(){
+  console.log(this.a);
+}
+
+var obj = {
+  a: 2,
+  foo: foo
+};
+
+var a = "oops, global"; //'a' also property on global object
+
+setTimeout(obj.foo, 100); //'oops, global'
